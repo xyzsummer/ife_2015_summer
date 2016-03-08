@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>qihang1</title>
+    <style>
+        *{
+            margin:0;
+            padding:0;
+        }
+        .container{
+            background-color: cornflowerblue;
+            width:800px;
+            margin:0  auto;
+            height:800px;
+        }
+        .con1{
+            width:100%;
+            height:20%;
+            font-size: 20px;
+            text-align: center;
+        }
+        .con1 p{
+            display: inline-block;
+            padding:70px 110px;
+        }
+        #count{
+            font-size: 24px;
+            color:white;
+            font-weight: bold;
+        }
+        .con2{
+            height:40%;
+            text-align: center;
+            vertical-align: middle;
+        }
+        .con2 i{
+            display:inline-block;
+            height:100%;
+            vertical-align:middle
+        }
+        .con2 img{
+            vertical-align: middle;
+        }
+        .con3{
+            height:40%;
+            text-align: center;
+            vertical-align: middle;
+
+        }
+        .con3 i{
+            display:inline-block;
+            height:100%;
+            vertical-align:middle
+        }
+        .con3 img{
+            vertical-align: middle;
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+        .con3 span{
+            font-size: 20px;
+        }
+
+    </style>
+
+</head>
+<body>
+<div class="container">
+    <div class="con1">
+        <p>请出拳吧，少年！</p>
+        <p>你已经获胜<span id="count">0</span>次！</p>
+    </div>
+    <div class="con2">
+        <i></i>
+        <img class="pic" src="jiandao.jpg" name="jiandao">
+        <img class="pic" src="shitou.jpg" name="shitou">
+        <img class="pic" src="bu.jpg" name="bu">
+    </div>
+    <div class="con3">
+        <i></i>
+        <img id="my-result" src="jiandao.jpg">
+        <span id="result">tie</span>
+        <img id="computer-result" src="jiandao.jpg">
+    </div>
+</div>
+
+<script>
+
+    var ncount=0;    //记录win的次数
+    var pic=document.getElementsByClassName("pic");
+    var computer_result=document.getElementById("computer-result");
+    var result=document.getElementById("result");
+    var pic_result=["jiandao.jpg","shitou.jpg","bu.jpg"];
+    for(var i=0;i<pic.length;i++)
+    {
+        //函数内部的i数值用于等于3
+        pic[i].onclick=function(){
+            var time;
+            var pict=this;
+
+            if(this.name=="jiandao"){
+                time=0;
+            }else if(this.name=="shitou"){
+                time=1;
+            }else if(this.name=="bu"){
+                time=2;
+            }
+
+            var my_result=document.getElementById("my-result");
+            my_result.src=pict.src;
+            var computer;
+            computer=Math.random();
+            if(computer<=0.33)
+            {
+                computer_result.src=pic_result[time];
+                result.innerHTML="tie";
+            }else if(computer<=0.66)
+            {
+                computer_result.src=pic_result[(time+1)%3];
+                result.innerHTML="lose";
+            }else if(computer<=1)
+            {
+                computer_result.src=pic_result[(time+2)%3];
+                result.innerHTML="win";
+                ncount++;
+                var count=document.getElementById("count");
+                count.innerHTML=ncount;
+            }
+        }
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> title</title>
+    <link rel="stylesheet" type="text/css" href="bootstrap-3.3.5-dist/css/bootstrap.css">
+    <script type="text/javascript" src="bootstrap-3.3.5-dist/js/jquery-2.2.1.js"></script>
+    <script type="text/javascript" src="bootstrap-3.3.5-dist/js/bootstrap.js"></script>
+    <style>
+        .con{
+            margin:0 auto;
+            margin-top:100px;
+            height:510px;
+            width:510px;
+        }
+        .container{
+            height:100%;
+            width:100%;
+            border-radius: 20px;
+            border:10px solid #d4d4d4;
+        }
+        .container .row{
+            height: 25%;
+        }
+        .col-lg-3{
+            height:100%;
+            border:10px solid #d4d4d4;
+            color: #999999;
+            font-size: 40px;
+            font-weight:bolder;
+            text-align: center;
+            line-height: 250%;
+        }
+        .tishi{
+            text-align: center;
+            font-size: 30px;
+            font-weight:bolder;
+            position:relative;
+            top:-510px;
+            color:red;
+            line-height: 510px;
+            height:100%;
+            width:100%;
+            opacity:0.6;
+            background-color: #d4d4d4;
+            border-radius: 20px;
+            border:10px solid #d4d4d4;
+        }
+        .unactive{
+            background-color: #d9edf7;
+        }
+        .active{
+            background-color: lightcyan;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="con">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 unactive"></div>
+            <div class="col-lg-3 unactive"></div>
+            <div class="col-lg-3 unactive"></div>
+            <div class="col-lg-3 unactive"></div>
+        </div>
+        <div class="row">
+            <div class="col-lg-3 unactive"></div>
+            <div class="col-lg-3 unactive"></div>
+            <div class="col-lg-3 unactive"></div>
+            <div class="col-lg-3 unactive"></div>
+        </div>
+        <div class="row">
+            <div class="col-lg-3 unactive"></div>
+            <div class="col-lg-3 unactive"></div>
+            <div class="col-lg-3 unactive"></div>
+            <div class="col-lg-3 unactive"></div>
+        </div>
+        <div class="row">
+            <div class="col-lg-3 unactive"></div>
+            <div class="col-lg-3 unactive"></div>
+            <div class="col-lg-3 unactive"></div>
+            <div class="col-lg-3 unactive"></div>
+        </div>
+    </div>
+    <div class="tishi">
+        点击继续
+    </div>
+</div>
+
+
+<script>
+    var con=document.getElementsByClassName("con");
+   // var container=document.getElementsByClassName("container").item(0);
+    var container=$(".container");
+    var div=$(".col-lg-3");
+
+    var tishi=document.getElementsByClassName("tishi").item(0);
+    var start=false;
+    var win=0;
+
+    //添加点击开始事件
+    con.item(0).onclick=function(){                //利用classname的时候生成的是一个nodelist，因此需要选择其中的一个元素添加事件属性
+        if(start==false)
+        {
+            tishi.innerHTML=" ";
+            tishi.parentNode.removeChild(tishi);         //删除提示的div   不删除div
+            start=true;
+
+            //随机在两个不同的容器中初始化生成2，一共16个容器，利用随机数在任意两个中初始化值
+            var p1=0;
+            var p2=0;
+
+            while(p1===p2){
+                p1=Math.floor(Math.random()*16);
+                p2=Math.floor(Math.random()*16);
+            }
+
+            div.eq(p1).removeClass("unactive");
+            div.eq(p1).addClass("active");
+            div.eq(p2).removeClass("unactive");
+            div.eq(p2).addClass("active");
+            div.eq(p1).attr("value",2);
+            div.eq(p2).attr("value",4);
+            div.eq(p1)[0].innerHTML=div.eq(p1).attr("value");                      //初始化生成的数据
+            div.eq(p2)[0].innerHTML=div.eq(p2).attr("value");
+
+            $(".unactive").each(function(){
+                var $this=$(this);
+                $this.attr("value",0);
+            });
+
+        }
+    };
+
+    function leftcode(){          //左移棋子
+        var $row=$(".row");
+
+        for(var i=0;i<$row.length;i++)    //i代表的是每一行的元素
+        {
+            var list=$row.eq(i).children();      //按下向左的键时，需要从最后的一个向前一个变化，list为每一行中的四个div
+
+            for(var j=0;j<list.length;j++)     //从第一个格子开始进行合并
+            {
+                var cell=list.eq(j);
+                if(cell.hasClass("active"))     //如果有数值的话，就判断下一个是不是也有数值
+                {
+                    var k=j+1;
+                    while(k<4){
+                        var nextcell=list.eq(k);    //获得下一个兄弟结点
+                        if(nextcell.hasClass("active")){    //如果下一个结点仍然是有数值
+                            if(nextcell.attr("value")===cell.attr("value"))      //如果可以合并的话
+                            {
+                                console.log(i);
+                                console.log(j);
+                                console.log(k);
+
+                                var a=cell.attr("value")*2;
+                                cell.attr("value",a);
+
+                                cell[0].innerHTML=cell.attr("value");
+                                nextcell.attr("value",0);
+                                nextcell[0].innerHTML="";
+                                nextcell.removeClass("active");
+                                nextcell.addClass("unactive");
+                                if(cell.attr("value")=="2048")
+                                {
+                                    win=1;
+                                }
+                            }
+                            k=4;
+                            break;
+                        }
+                        k++;
+                    }
+                }
+            }
+        }
+
+        for(i=0;i<$row.length;i++)
+        {
+            list=$row.eq(i).children();
+
+            for(var j=0;j < list.length;j++)     //从第一个格子开始进行合并
+            {
+                var cell=list.eq(j);
+                if(cell.hasClass("unactive"))     //如果是空格的话
+                {
+                   k=i+1;
+                    while(k<4){
+                        nextcell=list.eq(k);
+                        if(nextcell.hasClass("active")){
+
+                            console.log(i);
+                            console.log(j);
+                            console.log(k);
+
+                            cell.removeClass("unactive");
+                            cell.addClass("active");
+
+                         //   cell.classList.remove("unactive");   JQuery的操作方法不能和JS 的操作方法放在一起
+                         //   cell.classList.add("active");
+                            cell.attr("value",nextcell.attr("value"));
+                            cell[0].innerHTML=cell.attr("value");
+
+                            nextcell.attr("value",0);
+                            nextcell[0].innerHTML=" ";
+                            nextcell.removeClass("active");
+                            nextcell.addClass("unactive");
+                            k=4;
+                        }
+                        k++;
+                    }
+                }
+            }
+
+        }
+    }
+
+
+
+    function rightcode(){          //右移棋子
+        var $row=$(".row");
+
+        for(var i=0;i<$row.length;i++)    //i代表的是每一行的元素
+        {
+            var list=$row.eq(i).children();      //按下向左的键时，需要从最后的一个向前一个变化，list为每一行中的四个div
+
+            for(var j=3;j>=0;j--)     //从第一个格子开始进行合并
+            {
+                var cell=list.eq(j);
+                if(cell.hasClass("active"))     //如果有数值的话，就判断下一个是不是也有数值
+                {
+                    var k=j-1;
+                    while(k>=0){
+                        var nextcell=list.eq(k);    //获得下一个兄弟结点
+                        if(nextcell.hasClass("active")){    //如果下一个结点仍然是有数值
+                            if(nextcell.attr("value")===cell.attr("value"))      //如果可以合并的话
+                            {
+                                var a=cell.attr("value")*2;
+                                cell.attr("value",a);
+
+                                cell[0].innerHTML=cell.attr("value");
+                                nextcell.attr("value",0);
+                                nextcell[0].innerHTML="";
+                                nextcell.removeClass("active");
+                                nextcell.addClass("unactive");
+                                if(cell.attr("value")=="2048")
+                                {
+                                    win=1;
+                                }
+                            }
+                            k=-1;
+                            break;
+                        }
+                        k--;
+                    }
+                }
+            }
+        }
+
+        for(i=0;i<$row.length;i++)
+        {
+            list=$row.eq(i).children();
+            for(var j=3;j>=0;j--)     //从第一个格子开始进行合并
+            {
+                var cell=list.eq(j);
+                if(cell.hasClass("unactive"))     //如果是空格的话
+                {
+                    k=i-1;
+                    while(k>=0){
+                        nextcell=list.eq(k);
+                        if(nextcell.hasClass("active")){
+
+                            cell.removeClass("unactive");
+                            cell.addClass("active");
+
+                            cell.attr("value",nextcell.attr("value"));
+                            cell[0].innerHTML=cell.attr("value");
+
+                            nextcell.attr("value",0);
+                            nextcell[0].innerHTML=" ";
+                            nextcell.removeClass("active");
+                            nextcell.addClass("unactive");
+                            k=4;
+                        }
+                        k--;
+                    }
+                }
+            }
+        }
+
+
+    }
+
+
+
+    function upcode(){          //上移棋子
+        var $row=$(".row");
+
+
+        for(var i=0;i<4;i++)
+        {
+            for(var j=0;j<4;j++)
+            {
+                var cell=$row.eq(j).children().eq(i);      //获得一个元素
+                if(cell.hasClass("active"))
+                {
+                    var k=j+1;
+                    while(k<4){
+                        var nextcell=$row.eq(k).children().eq(i);    //获得下一个兄弟结点
+                        if(nextcell.hasClass("active")){    //如果下一个结点仍然是有数值
+                            if(nextcell.attr("value")===cell.attr("value"))      //如果可以合并的话
+                            {
+                                var a=cell.attr("value")*2;
+                                cell.attr("value",a);
+
+                                cell[0].innerHTML=cell.attr("value");
+                                nextcell.attr("value",0);
+                                nextcell[0].innerHTML="";
+                                nextcell.removeClass("active");
+                                nextcell.addClass("unactive");
+                                if(cell.attr("value")=="2048")
+                                {
+                                    win=1;
+                                }
+                            }
+                            k=4;
+                            break;
+                        }
+                        k++;
+                    }
+                }
+            }
+        }
+
+
+        for(var i=0;i<4;i++)
+        {
+            for(var j=0;j<4;j++)
+            {
+                var cell=$row.eq(j).children().eq(i);      //获得一个元素
+                if(cell.hasClass("unactive"))
+                {
+                    k=i+1;
+                    while(k<4){
+                        nextcell=$row.eq(k).children().eq(i);
+                        if(nextcell.hasClass("active")){
+                            cell.removeClass("unactive");
+                            cell.addClass("active");
+
+                            cell.attr("value",nextcell.attr("value"));
+                            cell[0].innerHTML=cell.attr("value");
+
+                            nextcell.attr("value",0);
+                            nextcell[0].innerHTML=" ";
+                            nextcell.removeClass("active");
+                            nextcell.addClass("unactive");
+                            k=4;
+                        }
+                        k++;
+                    }
+                }
+            }
+        }
+    }
+
+
+    function downcode(){          //下移棋子
+        var $row=$(".row");
+
+
+        for(var i=0;i<4;i++)
+        {
+            for(var j=3;j>=0;j--)
+            {
+                var cell=$row.eq(j).children().eq(i);      //获得一个元素
+                if(cell.hasClass("active"))
+                {
+                    var k=j-1;
+                    while(k>=0){
+                        var nextcell=$row.eq(k).children().eq(i);    //获得下一个兄弟结点
+                        if(nextcell.hasClass("active")){    //如果下一个结点仍然是有数值
+                            if(nextcell[0].innerHTML===cell[0].innerHTML)      //如果可以合并的话
+                            {
+                                var a=cell.attr("value")*2;
+                                cell.attr("value",a);
+
+                                cell[0].innerHTML=cell.attr("value");
+                                nextcell.attr("value",0);
+                                nextcell[0].innerHTML="";
+                                nextcell.removeClass("active");
+                                nextcell.addClass("unactive");
+                                if(cell.attr("value")=="2048")
+                                {
+                                    win=1;
+                                }
+                            }
+                            k=-1;
+                            break;
+                        }
+                        k--;
+                    }
+                }
+            }
+        }
+
+
+        for(var i=0;i<4;i++)
+        {
+            for(var j=3;j>=0;j--)
+            {
+                var cell=$row.eq(j).children().eq(i);      //获得一个元素
+                if(cell.hasClass("unactive"))
+                {
+                    k=i-1;
+                    while(k>=0){
+                        nextcell=$row.eq(k).children().eq(i);
+                        if(nextcell.hasClass("active")){
+                            cell.removeClass("unactive");
+                            cell.addClass("active");
+
+                            cell.attr("value",nextcell.attr("value"));
+                            cell[0].innerHTML=cell.attr("value");
+
+                            nextcell.attr("value",0);
+                            nextcell[0].innerHTML=" ";
+                            nextcell.removeClass("active");
+                            nextcell.addClass("unactive");
+                            k=-1;
+                        }
+                        k--;
+                    }
+                }
+            }
+        }
+    }
+
+
+
+    window.onkeydown=function(event){       //
+        event=event?event:window.event;
+        var code=event.keyCode;
+
+        if(start)
+        {
+            if(code<=40 && code>=37)     //如果按键是上下左右这四个键的话，才可以运行程序
+            {
+                switch(code){
+                    case 37: leftcode(); break;      //左箭头的程序
+                    case 38: rightcode(); break;     //上箭头的程序
+                    case 39: upcode(); break;     //右箭头的程序
+                    case 40: downcode(); break;     //下箭头的程序
+                }
+
+
+                //每按下一个键后需要判断是否是已经到达2048，如果已经达到的话，就可以退出
+                if(win)
+                {
+                    tishi.innerHTML="You Win!点击重新开始";
+                    var active=$(".active");
+                    for(var i=0;i<active.length;i++)
+                    {
+                        active.eq(i).classList.remove("unactive");
+                        active.eq(i).classList.add("active");
+                    }
+                    start==false;
+                }
+                else
+                {
+                    //在空着的地方随机生成一个
+                    var unactive=$(".unactive");
+                    if(unactive.length>=1)      //说明还有空间可以生成随机数
+                    {
+                        var len=unactive.length;
+                        var p1=0;
+
+                        p1=Math.floor(Math.random()*len);
+                        unactive.eq(p1).removeClass("unactive");
+                        unactive.eq(p1).addClass("active");
+                        unactive.eq(p1).attr("value",2);
+                        unactive.eq(p1)[0].innerHTML="2";
+                    }
+                    else{
+                        //说明没有可以多余的位置，说明失败了
+                        tishi.innerHTML="挑战失败!点击重新开始";
+                    }
+                }
+
+            }
+        }
+
+    };
+
+
+
+
+
+
+</script>
+
+</body>
+</html>

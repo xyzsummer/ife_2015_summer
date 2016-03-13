@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+
+<style>
+
+    .aqi-chart-tooltip{
+        list-style: none;
+    }
+    .aqi-chart-tooltip li{
+        border:1px solid black;
+        padding:10px;
+        display:inline-block;
+        cursor: pointer;
+    }
+
+    .aqi-chart-tooltip li:hover{
+        background-color: orange;
+    }
+
+    .aqi-chart{
+        list-style: none;
+        margin:0;
+        padding:0;
+    }
+
+    .aqi-chart li span{
+        height:20px;
+        width:100px;
+        display:inline-block;
+    }
+
+    .aqi-bad{
+        background-color: black;
+    }
+    .aqi-common{
+        background-color: red;
+    }
+    .aqi-light{
+        background-color: blue;
+    }
+    .aqi-good{
+        background-color: green;
+    }
+
+</style>
+
+<body>
+<ul class="aqi-chart-tooltip">
+    <li>严重污染</li>
+    <li>中度污染</li>
+    <li>轻度污染</li>
+    <li>优良</li>
+</ul>
+<ul id="chart-wrapper" class="aqi-chart"></ul>
+
+<script>
+
+    var aqiSourceData = [             //数组形式，包含各个月份的数据
+        [32, 54, 76, 121, 145, 167, 200, 300, 500, 500, 500, 500, 430, 320, 15, 15, 26, 43, 41, 200, 345],
+        [32, 54, 76, 121, 145, 11, 11, 11, 50, 11, 11, 500, 430, 320, 15, 15, 26, 43, 41, 20, 345],
+        [32, 54, 76, 11, 145, 167, 200, 300, 500, 500, 50, 500, 430, 320, 15, 15, 26, 43, 41, 200, 345]
+    ];
+    var AQI_GOOD_MAX = 100;
+    var AQI_LIGHT_MAX = 200;
+    var AQI_COMMON_MAX = 300;
+
+    function transMonthDataFormat(src){
+        var outputData={
+            "aqibad" :0,
+            "aqicommon":0,
+            "aqilight":0,
+            "aqigood":0,
+        };
+
+        for(var i= 0,len=src.length;i<len;i++){
+            if(src[i]<AQI_GOOD_MAX){
+                outputData.aqigood ++;
+            }else if(src[i]<AQI_LIGHT_MAX){
+                outputData.aqilight ++;
+            }else if(src[i]<AQI_COMMON_MAX){
+                outputData.aqicommon++;
+            }else{
+                outputData.aqibad++;
+            }
+        }
+        return outputData;
+    }
+
+    function renderMonthChart(month, data)
+    {
+        var returnHtml = "";
+
+        returnHtml += '<li>';
+        returnHtml += month + '：';
+        returnHtml += '<span class="aqi-bad" style="width:' + data.aqibad * 20 + 'px"></span>';
+        returnHtml += '<span class="aqi-common" style="width:' + data.aqicommon * 20 + 'px"></span>';
+        returnHtml += '<span class="aqi-light" style="width:' + data.aqilight * 20 + 'px"></span>';
+        returnHtml += '<span class="aqi-good" style="width:' + data.aqigood * 20 + 'px"></span>';
+        returnHtml += '</li>';
+        return returnHtml;
+    }
+
+    function aqiChartGenerator() {
+        var chartHtml = "";
+        for (var i = 0, len = aqiSourceData.length; i < len; i++) {
+            var monthText = (i + 1) + '月';
+            var monthData = transMonthDataFormat(aqiSourceData[i]);
+
+            chartHtml += renderMonthChart(monthText, monthData);
+        }
+        document.getElementById("chart-wrapper").innerHTML = chartHtml;
+    }
+
+    aqiChartGenerator();
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+
+    <link type="text/css" rel="stylesheet" href="bootstrap-3.3.5-dist/css/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="yangfan1.css">
+    <!-- 引入 ECharts 文件   本次的数据可视化操作引入外部库     -->
+    <script src="echarts.min.js"></script>
+    <script src="bootstrap-3.3.5-dist/js/jquery-1.10.2.min.js"></script>
+    <script src="bootstrap-3.3.5-dist/js/bootstrap.min.js"></script>
+    <!-- JS外部文件的方式引入地图数据   -->
+    <script src="bootstrap-3.3.5-dist/js/china.js"></script>
+    <script src="bootstrap-3.3.5-dist/js/world.js"></script>
+    <script type="text/javascript" language="javascript" src="map.js" ></script>
+</head>
+
+<body>
+<h4 style="padding-left: 140px; font-weight: bold">中国主要城市空气质量地图图表</h4>
+<div id="container">
+    <div id="main" ></div>
+</div>
+
+<div id="navcontainer">
+    <div  class="navd">
+        <ul class="nav nav-tabs">
+            <li class="active" data-toggle="tab" href="#circlefigure"><a>环形图</a></li>
+            <li><a data-toggle="tab" href="#piefigure">饼状图</a></li>
+        </ul>
+        <div class="tab-content">
+            <div id="circlefigure" class="tab-pane fade in active">
+            </div>
+            <div id="piefigure" class="tab-pane fade">
+            </div>
+        </div>
+    </div>
+    <div  class="navd" style="margin-left: 16px">
+        <ul class="nav nav-tabs">
+            <li class="active" data-toggle="tab" href="#linefigure"><a>折线图</a></li>
+            <li><a data-toggle="tab" href="#pillarfigure">柱状图</a></li>
+        </ul>
+        <div class="tab-content">
+            <div id="linefigure" class="tab-pane fade in active">
+            </div>
+            <div id="pillarfigure" class="tab-pane fade">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    var myChart1 =echarts.init(document.getElementById("main"));
+    //Question:   怎么改变legend图例颜色？？？？？
+    myChart1.setOption(option1);
+
+    var circlefigure=document.getElementById("circlefigure");    //环形图
+    var piefigure=document.getElementById("piefigure");          //饼状图
+
+    var linefigure=document.getElementById("linefigure");        //折线图
+    var pillarfigure=document.getElementById("pillarfigure");   //柱状图
+
+    var myChart2 =echarts.init(circlefigure);
+    //Question:   怎么改变legend图例颜色？？？？？
+    myChart2.setOption(option2);
+    circlefigure.style.backgroundColor="white";
+
+    var myChart3 =echarts.init(piefigure);
+    //Question:   怎么改变legend图例颜色？？？？？
+    myChart3.setOption(option3);
+    piefigure.style.backgroundColor="white";
+
+    var myChart4 =echarts.init(linefigure);
+    //Question:   怎么改变legend图例颜色？？？？？
+    myChart4.setOption(option4);
+    linefigure.style.backgroundColor="white";
+
+    var myChart5 =echarts.init(pillarfigure);
+    //Question:   怎么改变legend图例颜色？？？？？
+    myChart5.setOption(option5);
+    pillarfigure.style.backgroundColor="white";
+
+</script>
+
+</body>
+</html>
